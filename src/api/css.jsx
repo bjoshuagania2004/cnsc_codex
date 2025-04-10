@@ -1,0 +1,3 @@
+const inputClass = ""
+
+const whiteText = ""
