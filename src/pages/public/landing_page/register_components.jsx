@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ReturnButton, Submitbutton } from "../../../components/buttons";
 import { ReusableFileUpload } from "../../../components/reusable_file_upload";
-
 import SearchableDropdown from "../../../components/searchable_drop_down";
 
+// Organization Component with Show/Hide Password indicator
 export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
+  const [showOrgPassword, setShowOrgPassword] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     onChange({
@@ -13,8 +15,9 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
     });
   };
 
-  const classification = formData.classification;
+  const toggleOrgPassword = () => setShowOrgPassword((prev) => !prev);
 
+  const classification = formData.classification;
   const departments = ["Department A", "Department B", "Department C"];
   const courses = ["Course X", "Course Y", "Course Z"];
 
@@ -32,13 +35,6 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
     });
   };
 
-  const handleAdviserDepartmentChange = (selected) => {
-    onChange({
-      ...formData,
-      adviserDepartment: selected,
-    });
-  };
-
   return (
     <section className="mt-4">
       <form
@@ -46,8 +42,7 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
         onSubmit={handleSubmit}
       >
         <div className="w-[90%]">
-          <div className=" pt-10  pl-10 pr-10 bg-white mt-2">
-            {/* Organization Section */}
+          <div className="pt-10 pl-10 pr-10 bg-white mt-4">
             <section>
               <div className="mb-4 font-semibold text-lg flex items-center">
                 <h1 className="w-2/5 max-w-fit mr-3">
@@ -55,125 +50,124 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
                 </h1>
               </div>
               <div className="grid grid-cols-6 gap-x-2 gap-y-1">
-                {/* Name */}
-                <div className="flex flex-col gap-1 col-span-3">
-                  <label htmlFor="organizationUsername">
-                    Organization UserName
-                  </label>
-                  <input
-                    type="text"
-                    id="organizationUsername"
-                    name="organizationUsername"
-                    className="border py-2 px-4 rounded-2xl"
-                    value={formData.organizationUsername || ""}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="flex flex-col gap-1 col-span-3">
-                  <label htmlFor="organizationPassword">
-                    Organization Password
-                  </label>
-                  <input
-                    type="password"
-                    id="organizationPassword"
-                    name="organizationPassword"
-                    className="border py-2 px-4 rounded-2xl"
-                    value={formData.organizationPassword || ""}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="flex flex-col gap-1 col-span-4">
-                  <label htmlFor="organizationName">Organization Name</label>
-                  <input
-                    type="text"
-                    id="organizationName"
-                    name="organizationName"
-                    className="border py-2 px-4 rounded-2xl"
-                    value={formData.organizationName || ""}
-                    onChange={handleChange}
-                  />
-                </div>
-                {/* Acronym */}
-                <div className="flex flex-col gap-1 col-span-2">
-                  <label htmlFor="organizationAcronym">
-                    Organization Acronym
-                  </label>
-                  <input
-                    type="text"
-                    id="organizationAcronym"
-                    name="organizationAcronym"
-                    className="border py-2 px-4 rounded-2xl"
-                    value={formData.organizationAcronym || ""}
-                    onChange={handleChange}
-                  />
-                </div>
-                {/* President */}
-                <div className="flex flex-col gap-1 col-span-3">
-                  <label htmlFor="organizationPresident">
-                    Organization President
-                  </label>
-                  <input
-                    type="text"
-                    id="organizationPresident"
-                    name="organizationPresident"
-                    className="border py-2 px-4 rounded-2xl"
-                    value={formData.organizationPresident || ""}
-                    onChange={handleChange}
-                  />
-                </div>
-                {/* Email */}
-                <div className="flex flex-col gap-1 col-span-3">
-                  <label htmlFor="organizationEmail">Organization Email</label>
-                  <input
-                    type="text"
-                    id="organizationEmail"
-                    name="organizationEmail"
-                    className="border py-2 px-4 rounded-2xl"
-                    value={formData.organizationEmail || ""}
-                    onChange={handleChange}
-                  />
-                </div>
-                {/* Code */}
-                {/* Classification */}
+                {[
+                  {
+                    label: "Organization UserName",
+                    id: "organizationUsername",
+                  },
+                  {
+                    label: "Organization Password",
+                    id: "organizationPassword",
+                    type: showOrgPassword ? "text" : "password",
+                  },
+                  {
+                    label: "Organization Name",
+                    id: "organizationName",
+                    colSpan: 4,
+                  },
+                  {
+                    label: "Organization Acronym",
+                    id: "organizationAcronym",
+                    colSpan: 2,
+                  },
+                  {
+                    label: "Organization President",
+                    id: "organizationPresident",
+                    colSpan: 3,
+                  },
+                  {
+                    label: "Organization Email",
+                    id: "organizationEmail",
+                    colSpan: 3,
+                  },
+                ].map(({ label, id, colSpan = 3, type = "text" }) => (
+                  <div
+                    className={`flex flex-col gap-1 col-span-${colSpan}`}
+                    key={id}
+                  >
+                    <label htmlFor={id}>
+                      {label} <span className="text-red-500">*</span>
+                    </label>
+                    {id === "organizationPassword" ? (
+                      <div className="relative">
+                        <input
+                          type={type}
+                          id={id}
+                          name={id}
+                          autoComplete="new-password"
+                          className="border py-2 px-4 rounded-2xl w-full"
+                          value={formData[id] || ""}
+                          onChange={handleChange}
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={toggleOrgPassword}
+                          className="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none"
+                        >
+                          {showOrgPassword ? (
+                            <>
+                              <i className="fa fa-eye"></i>
+                              <span className="ml-1 text-sm">Hide</span>
+                            </>
+                          ) : (
+                            <>
+                              <i className="fa fa-eye-slash"></i>
+                              <span className="ml-1 text-sm">Show</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      <input
+                        type={type}
+                        id={id}
+                        name={id}
+                        className="border py-2 px-4 rounded-2xl"
+                        value={formData[id] || ""}
+                        onChange={handleChange}
+                        required
+                      />
+                    )}
+                  </div>
+                ))}
 
-                <div className="col-span-6  flex">
-                  {/* Conditional Fields */}
+                <div className="col-span-6 flex">
                   <div className="flex flex-col w-2/5 gap-1">
-                    <label>Classification</label>
-                    <div className="flex h-full  ">
-                      <div className="flex items-center gap-2 flex-1">
-                        <input
-                          type="radio"
-                          id="classificationLocal"
-                          name="classification"
-                          value="Local"
-                          checked={classification === "Local"}
-                          onChange={handleChange}
-                          className="h-6 w-6"
-                        />
-                        <label htmlFor="classificationLocal">Local</label>
-                      </div>
-                      <div className="flex items-center gap-2 flex-1">
-                        <input
-                          type="radio"
-                          id="classificationSystemWide"
-                          name="classification"
-                          value="System-wide"
-                          checked={classification === "System-wide"}
-                          onChange={handleChange}
-                          className="h-6 w-6"
-                        />
-                        <label htmlFor="classificationSystemWide">
-                          System-wide
-                        </label>
-                      </div>
+                    <label>
+                      Classification <span className="text-red-500">*</span>
+                    </label>
+                    <div className="flex h-full">
+                      {["Local", "System-wide"].map((option) => (
+                        <div
+                          key={option}
+                          className="flex items-center gap-2 flex-1"
+                        >
+                          <input
+                            type="radio"
+                            id={`classification${option}`}
+                            name="classification"
+                            value={option}
+                            checked={classification === option}
+                            onChange={handleChange}
+                            className="h-6 w-6"
+                            required
+                          />
+                          <label htmlFor={`classification${option}`}>
+                            {option}
+                          </label>
+                        </div>
+                      ))}
                     </div>
                   </div>
+
                   {classification === "Local" && (
                     <div className="flex-1">
                       <div className="flex justify-between col-span-4 gap-4">
                         <div className="flex flex-col gap-1 flex-1">
-                          <label htmlFor="department">Department</label>
+                          <label>
+                            Department <span className="text-red-500">*</span>
+                          </label>
                           <SearchableDropdown
                             label="Department"
                             options={departments}
@@ -183,7 +177,9 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
                           />
                         </div>
                         <div className="flex flex-col gap-1 flex-1">
-                          <label htmlFor="course">Course</label>
+                          <label>
+                            Course <span className="text-red-500">*</span>
+                          </label>
                           <SearchableDropdown
                             label="Course"
                             options={courses}
@@ -195,10 +191,13 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
                       </div>
                     </div>
                   )}
+
                   {classification === "System-wide" && (
                     <div className="flex-1">
                       <div className="flex flex-col gap-1 col-span-4">
-                        <label htmlFor="specialization">Specialization</label>
+                        <label htmlFor="specialization">
+                          Specialization <span className="text-red-500">*</span>
+                        </label>
                         <input
                           type="text"
                           id="specialization"
@@ -206,6 +205,7 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
                           className="border py-2 px-4 rounded-2xl"
                           value={formData.specialization || ""}
                           onChange={handleChange}
+                          required
                         />
                       </div>
                     </div>
@@ -214,7 +214,6 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
               </div>
             </section>
 
-            {/* Submit */}
             <div className="w-full mt-2 gap-4 flex justify-end pt-10 pb-5">
               <Submitbutton />
             </div>
@@ -224,12 +223,16 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
     </section>
   );
 };
+
+// Adviser Component with Show/Hide Password indicator
 export const AdviserComponent = ({
   formData,
   onChange,
   onReturn,
   handleSubmit,
 }) => {
+  const [showAdviserPassword, setShowAdviserPassword] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     onChange({
@@ -238,8 +241,9 @@ export const AdviserComponent = ({
     });
   };
 
-  const classification = formData.classification;
+  const toggleAdviserPassword = () => setShowAdviserPassword((prev) => !prev);
 
+  const classification = formData.classification;
   const departments = ["Department A", "Department B", "Department C"];
   const courses = ["Course X", "Course Y", "Course Z"];
 
@@ -271,7 +275,7 @@ export const AdviserComponent = ({
         onSubmit={handleSubmit}
       >
         <div className="w-[90%]">
-          <div className=" pt-10  pl-10 pr-10 bg-white shadow-2xl mt-2">
+          <div className="pt-10 pl-10 pr-10 bg-white shadow-2xl mt-4">
             {/* Adviser Section */}
             <section className="mt-4">
               <div className="mb-2 font-semibold text-lg flex items-center">
@@ -291,14 +295,33 @@ export const AdviserComponent = ({
                 </div>
                 <div className="flex flex-col gap-1 col-span-3">
                   <label htmlFor="adviserPassword">Adviser Password</label>
-                  <input
-                    type="text"
-                    id="adviserPassword"
-                    name="adviserPassword"
-                    className="border py-2 px-4 rounded-2xl"
-                    value={formData.adviserPassword || ""}
-                    onChange={handleChange}
-                  />
+                  <div className="relative">
+                    <input
+                      type={showAdviserPassword ? "text" : "password"}
+                      id="adviserPassword"
+                      name="adviserPassword"
+                      className="border py-2 px-4 rounded-2xl w-full"
+                      value={formData.adviserPassword || ""}
+                      onChange={handleChange}
+                    />
+                    <button
+                      type="button"
+                      onClick={toggleAdviserPassword}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none"
+                    >
+                      {showAdviserPassword ? (
+                        <>
+                          <i className="fa fa-eye"></i>
+                          <span className="ml-1 text-sm">Hide</span>
+                        </>
+                      ) : (
+                        <>
+                          <i className="fa fa-eye-slash"></i>
+                          <span className="ml-1 text-sm">Show</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
                 <div className="flex flex-col gap-1 col-span-3">
                   <label htmlFor="adviserName">Adviser Name</label>
@@ -349,16 +372,15 @@ export const AdviserComponent = ({
   );
 };
 
+// File Upload Component (unchanged)
 export const FileUploadComponent = ({
   fields,
   handleSubmit,
   onReturn,
   initialFiles = {},
 }) => {
-  // Initialize state with parent's data
   const [uploadedFiles, setUploadedFiles] = useState(initialFiles);
 
-  // Update local state when parent's data changes
   useEffect(() => {
     setUploadedFiles(initialFiles);
   }, [initialFiles]);
@@ -372,7 +394,6 @@ export const FileUploadComponent = ({
       });
       return;
     }
-    // Store the first file
     setUploadedFiles((prev) => ({ ...prev, [fieldKey]: files[0] }));
   };
 
@@ -385,11 +406,10 @@ export const FileUploadComponent = ({
     <section>
       <form
         onSubmit={onSubmit}
-        className=" space-y-4 flex  flex-col items-center my-5"
+        className="space-y-4 flex flex-col items-center my-5"
       >
         <div className="w-[90%]">
-          {/* New container div for file uploads */}
-          <div className="p-4  bg-white shadow-2xl">
+          <div className="p-4 bg-white shadow-2xl mt-3">
             <ReusableFileUpload
               fields={fields}
               onFileChange={handleFileChange}
@@ -406,14 +426,17 @@ export const FileUploadComponent = ({
   );
 };
 
+// Review Component with Student Password visible by default
 export const ReviewComponent = ({
   formData,
   uploadedFiles,
   onEdit,
   onFinalSubmit,
 }) => {
+  // Adviser password remains hidden by default
   const [showAdviserPassword, setShowAdviserPassword] = useState(false);
-  const [showStudentPassword, setShowStudentPassword] = useState(false);
+  // Student password is visible by default for review purposes
+  const [showStudentPassword, setShowStudentPassword] = useState(true);
 
   const toggleAdviserPassword = () => setShowAdviserPassword((prev) => !prev);
   const toggleStudentPassword = () => setShowStudentPassword((prev) => !prev);
@@ -423,15 +446,13 @@ export const ReviewComponent = ({
 
   return (
     <div className="w-full min-h-full flex justify-center mt-5">
-      <div className="w-[90%]  ">
-        <div className="container mx-auto p-10 bg-white shadow-2xl">
-          <section className="mt-4 ">
-            {/* Header */}
+      <div className="w-[90%]">
+        <div className="container mx-auto p-10 bg-white shadow-2xl mt-3">
+          <section className="mt-4">
             <div className="mb-4 font-semibold text-lg flex items-center">
               <h1 className="w-2/5 max-w-fit mr-3">Review Information</h1>
             </div>
-
-            {/* Org Info */}
+            {/* Organization Information */}
             <section className="mb-6">
               <h2 className="text-md font-semibold mb-2">
                 Organization Information
@@ -470,7 +491,7 @@ export const ReviewComponent = ({
               </div>
             </section>
 
-            {/* Adviser Info */}
+            {/* Adviser Information */}
             <section className="mb-6">
               <h2 className="text-md font-semibold mb-2">
                 Adviser Information
@@ -496,7 +517,7 @@ export const ReviewComponent = ({
                   <button
                     type="button"
                     onClick={toggleAdviserPassword}
-                    className="text-blue-600 text-xs underline"
+                    className="text-blue-600 text-xs underline focus:outline-none"
                   >
                     {showAdviserPassword ? "Hide" : "Show"}
                   </button>
@@ -504,7 +525,7 @@ export const ReviewComponent = ({
               </div>
             </section>
 
-            {/* Student Info */}
+            {/* Student Account */}
             <section className="mb-6">
               <h2 className="text-md font-semibold mb-2">Student Account</h2>
               <div className="grid grid-cols-2 gap-4 text-sm">
@@ -519,7 +540,7 @@ export const ReviewComponent = ({
                   <button
                     type="button"
                     onClick={toggleStudentPassword}
-                    className="text-blue-600 text-xs underline"
+                    className="text-blue-600 text-xs underline focus:outline-none"
                   >
                     {showStudentPassword ? "Hide" : "Show"}
                   </button>
@@ -528,9 +549,9 @@ export const ReviewComponent = ({
             </section>
 
             {/* Uploaded Files */}
-            <section className="mb-6 flex">
+            <section className="mb-6 flex flex-col items-center justify-center pt-10">
               <h2 className="text-md font-semibold mb-2">Uploaded Files</h2>
-              <div className="flex flex-wrap gap-6">
+              <div className="flex flex-col gap-6 justify-center items-center">
                 {uploadedFiles && Object.keys(uploadedFiles).length > 0 ? (
                   Object.entries(uploadedFiles).map(([key, file]) => (
                     <div
@@ -552,12 +573,12 @@ export const ReviewComponent = ({
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-gray-500">No files uploaded.</p>
+                  <div>No files uploaded</div>
                 )}
               </div>
             </section>
 
-            {/* Buttons */}
+            {/* Edit & Submit Buttons */}
             <div className="w-full flex justify-end gap-4">
               <button
                 type="button"
@@ -581,6 +602,7 @@ export const ReviewComponent = ({
   );
 };
 
+// Email Confirmation Component (unchanged)
 export const EmailConfirmationComponent = ({ email, onConfirm, onResend }) => {
   const [code, setCode] = useState("");
 
@@ -595,7 +617,7 @@ export const EmailConfirmationComponent = ({ email, onConfirm, onResend }) => {
 
   return (
     <div className="w-full min-h-full flex justify-center ">
-      <div className="w-[90%] mt-2 ">
+      <div className="w-[90%] mt-4 ">
         <section className="mt-4 p-4 bg-white">
           <div className="font-semibold text-lg flex items-center mb-4">
             <h1 className="w-2/5 max-w-fit mr-3">Email Confirmation</h1>
