@@ -283,7 +283,9 @@ export const AdviserComponent = ({
               </div>
               <div className="grid grid-cols-6 gap-x-2 gap-y-1">
                 <div className="flex flex-col gap-1 col-span-3">
-                  <label htmlFor="adviserUsername">Adviser Username</label>
+                  <label htmlFor="adviserUsername">
+                    Adviser Username <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     id="adviserUsername"
@@ -291,10 +293,13 @@ export const AdviserComponent = ({
                     className="border py-2 px-4 rounded-2xl"
                     value={formData.adviserUsername || ""}
                     onChange={handleChange}
+                    required
                   />
                 </div>
                 <div className="flex flex-col gap-1 col-span-3">
-                  <label htmlFor="adviserPassword">Adviser Password</label>
+                  <label htmlFor="adviserPassword">
+                    Adviser Password <span className="text-red-500">*</span>
+                  </label>
                   <div className="relative">
                     <input
                       type={showAdviserPassword ? "text" : "password"}
@@ -303,6 +308,7 @@ export const AdviserComponent = ({
                       className="border py-2 px-4 rounded-2xl w-full"
                       value={formData.adviserPassword || ""}
                       onChange={handleChange}
+                      required
                     />
                     <button
                       type="button"
@@ -324,7 +330,9 @@ export const AdviserComponent = ({
                   </div>
                 </div>
                 <div className="flex flex-col gap-1 col-span-3">
-                  <label htmlFor="adviserName">Adviser Name</label>
+                  <label htmlFor="adviserName">
+                    Adviser Name <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     id="adviserName"
@@ -332,10 +340,13 @@ export const AdviserComponent = ({
                     className="border py-2 px-4 rounded-2xl"
                     value={formData.adviserName || ""}
                     onChange={handleChange}
+                    required
                   />
                 </div>
                 <div className="flex flex-col gap-1 col-span-3">
-                  <label htmlFor="adviserEmail">Adviser Email</label>
+                  <label htmlFor="adviserEmail">
+                    Adviser Email <span className="text-red-500">*</span>
+                  </label>
                   <input
                     type="text"
                     id="adviserEmail"
@@ -343,13 +354,16 @@ export const AdviserComponent = ({
                     className="border py-2 px-4 rounded-2xl"
                     value={formData.adviserEmail || ""}
                     onChange={handleChange}
+                    required
                   />
                 </div>
                 <div className="flex justify-between col-span-6 gap-4">
                   <div className="flex flex-col gap-1 flex-1">
-                    <label htmlFor="adviserDepartment">Department</label>
+                    <label htmlFor="adviserDepartment">
+                      Department <span className="text-red-500">*</span>
+                    </label>
                     <SearchableDropdown
-                      label="Department"
+                      label="Department *"
                       options={departments}
                       value={formData.adviserDepartment}
                       onChange={handleAdviserDepartmentChange}
@@ -426,176 +440,179 @@ export const FileUploadComponent = ({
   );
 };
 
-// Review Component with Student Password visible by default
+// Review Component (all inputs are now shown in plain text)
 export const ReviewComponent = ({
   formData,
   uploadedFiles,
   onEdit,
   onFinalSubmit,
 }) => {
-  // Adviser password remains hidden by default
-  const [showAdviserPassword, setShowAdviserPassword] = useState(false);
-  // Student password is visible by default for review purposes
-  const [showStudentPassword, setShowStudentPassword] = useState(true);
-
-  const toggleAdviserPassword = () => setShowAdviserPassword((prev) => !prev);
-  const toggleStudentPassword = () => setShowStudentPassword((prev) => !prev);
-
-  const isImage = (file) => file?.type?.startsWith("image/");
-  const getPreviewUrl = (file) => (file ? URL.createObjectURL(file) : "");
-
   return (
-    <div className="w-full min-h-full flex justify-center mt-5">
-      <div className="w-[90%]">
-        <div className="container mx-auto p-10 bg-white shadow-2xl mt-3">
-          <section className="mt-4">
-            <div className="mb-4 font-semibold text-lg flex items-center">
-              <h1 className="w-2/5 max-w-fit mr-3">Review Information</h1>
-            </div>
+    <div className="min-h-screen bg-[#E6E6E6] flex items-center justify-center py-8 px-4">
+      <div className="w-full max-w-4xl">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="p-8 ">
+            <h1 className="text-2xl font-bold mb-6 text-center">
+              Review Information
+            </h1>
+
             {/* Organization Information */}
-            <section className="mb-6">
-              <h2 className="text-md font-semibold mb-2">
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold text-gray-700 border-b pb-2 mb-4">
                 Organization Information
               </h2>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                 <p>
-                  <strong>Name:</strong> {formData.organizationName}
+                  <span className="font-medium">Name:</span>{" "}
+                  {formData.organizationName}
                 </p>
                 <p>
-                  <strong>Acronym:</strong> {formData.organizationAcronym}
+                  <span className="font-medium">Acronym:</span>{" "}
+                  {formData.organizationAcronym}
                 </p>
                 <p>
-                  <strong>President:</strong> {formData.organizationPresident}
+                  <span className="font-medium">President:</span>{" "}
+                  {formData.organizationPresident}
                 </p>
                 <p>
-                  <strong>Email:</strong> {formData.organizationEmail}
+                  <span className="font-medium">Email:</span>{" "}
+                  {formData.organizationEmail}
                 </p>
                 <p>
-                  <strong>Classification:</strong> {formData.classification}
+                  <span className="font-medium">Classification:</span>{" "}
+                  {formData.classification}
                 </p>
                 {formData.classification === "Local" && (
                   <>
                     <p>
-                      <strong>Department:</strong> {formData.department}
+                      <span className="font-medium">Department:</span>{" "}
+                      {formData.department}
                     </p>
                     <p>
-                      <strong>Course:</strong> {formData.course}
+                      <span className="font-medium">Course:</span>{" "}
+                      {formData.course}
                     </p>
                   </>
                 )}
                 {formData.classification === "System-wide" && (
                   <p>
-                    <strong>Specialization:</strong> {formData.specialization}
+                    <span className="font-medium">Specialization:</span>{" "}
+                    {formData.specialization}
                   </p>
                 )}
               </div>
-            </section>
+            </div>
+
+            {/* Organization Account */}
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold text-gray-700 border-b pb-2 mb-4">
+                Organization Account
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                <p>
+                  <span className="font-medium">Username:</span>{" "}
+                  {formData.organizationUsername}
+                </p>
+                <p>
+                  <span className="font-medium">Password:</span>{" "}
+                  {formData.organizationPassword}
+                </p>
+              </div>
+            </div>
 
             {/* Adviser Information */}
-            <section className="mb-6">
-              <h2 className="text-md font-semibold mb-2">
+            <div className="mb-8">
+              <h2 className="text-lg font-semibold text-gray-700 border-b pb-2 mb-4">
                 Adviser Information
               </h2>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
                 <p>
-                  <strong>Name:</strong> {formData.adviserName}
+                  <span className="font-medium">Name:</span>{" "}
+                  {formData.adviserName}
                 </p>
                 <p>
-                  <strong>Email:</strong> {formData.adviserEmail}
+                  <span className="font-medium">Email:</span>{" "}
+                  {formData.adviserEmail}
                 </p>
                 <p>
-                  <strong>Department:</strong> {formData.adviserDepartment}
+                  <span className="font-medium">Department:</span>{" "}
+                  {formData.adviserDepartment}
                 </p>
                 <p>
-                  <strong>Username:</strong> {formData.adviserUsername}
+                  <span className="font-medium">Username:</span>{" "}
+                  {formData.adviserUsername}
                 </p>
-                <p className="flex items-center gap-2">
-                  <strong>Password:</strong>{" "}
-                  {showAdviserPassword
-                    ? formData.adviserPassword
-                    : "•".repeat(formData.adviserPassword?.length || 8)}
-                  <button
-                    type="button"
-                    onClick={toggleAdviserPassword}
-                    className="text-blue-600 text-xs underline focus:outline-none"
-                  >
-                    {showAdviserPassword ? "Hide" : "Show"}
-                  </button>
+                <p>
+                  <span className="font-medium">Password:</span>{" "}
+                  {formData.adviserPassword}
                 </p>
               </div>
-            </section>
-
-            {/* Student Account */}
-            <section className="mb-6">
-              <h2 className="text-md font-semibold mb-2">Student Account</h2>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <p>
-                  <strong>Username:</strong> {formData.studentUsername}
-                </p>
-                <p className="flex items-center gap-2">
-                  <strong>Password:</strong>{" "}
-                  {showStudentPassword
-                    ? formData.studentPassword
-                    : "•".repeat(formData.studentPassword?.length || 8)}
-                  <button
-                    type="button"
-                    onClick={toggleStudentPassword}
-                    className="text-blue-600 text-xs underline focus:outline-none"
-                  >
-                    {showStudentPassword ? "Hide" : "Show"}
-                  </button>
-                </p>
-              </div>
-            </section>
+            </div>
 
             {/* Uploaded Files */}
-            <section className="mb-6 flex flex-col items-center justify-center pt-10">
-              <h2 className="text-md font-semibold mb-2">Uploaded Files</h2>
-              <div className="flex flex-col gap-6 justify-center items-center">
+            <div className="mb-8">
+              <h2 className="text-xl font-bold text-gray-800 border-b border-gray-300 pb-2 mb-6 text-center">
+                Uploaded Files
+              </h2>
+              <div className="flex flex-wrap gap-6 justify-center">
                 {uploadedFiles && Object.keys(uploadedFiles).length > 0 ? (
                   Object.entries(uploadedFiles).map(([key, file]) => (
                     <div
                       key={key}
-                      className="flex flex-col items-center max-w-xs text-sm"
+                      className="flex-1 min-w-50 p-4 bg-white rounded-lg shadow hover:shadow-black 
+                      transition duration-200 flex flex-col items-center text-center gap-2"
                     >
-                      <strong className="mb-1">{key}:</strong>
-                      {isImage(file) ? (
-                        <img
-                          src={getPreviewUrl(file)}
-                          alt={file.name}
-                          className="w-32 h-32 object-cover rounded shadow"
+                      {/* Header text that won't overflow */}
+                      <h3 className="text-gray-800 font-semibold w-full whitespace-normal break-words">
+                        {key}
+                      </h3>
+
+                      {/* Inline SVG icon in the center */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-10 w-10 text-gray-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M7 7h10M7 11h10m-7 4h7M5 21h14a2 2 0 002-2V7l-7-7H5a2 2 0 00-2 2v14a2 2 0 002 2z"
                         />
-                      ) : (
-                        <div className="text-gray-600 truncate text-center">
-                          📄 {file.name}
-                        </div>
-                      )}
+                      </svg>
+
+                      {/* File name that wraps inside the box */}
+                      <p className="text-sm text-gray-700 w-full whitespace-normal break-words">
+                        {file.name}
+                      </p>
                     </div>
                   ))
                 ) : (
-                  <div>No files uploaded</div>
+                  <p className="text-gray-600 text-center">No files uploaded</p>
                 )}
               </div>
-            </section>
+            </div>
 
             {/* Edit & Submit Buttons */}
-            <div className="w-full flex justify-end gap-4">
+            <div className="flex justify-end gap-4">
               <button
                 type="button"
                 onClick={onEdit}
-                className="bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 px-4 rounded-2xl"
+                className="px-6 py-2 bg-gray-300 hover:bg-gray-400 text-black font-semibold rounded-lg"
               >
                 Edit
               </button>
               <button
                 type="button"
                 onClick={onFinalSubmit}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-2xl"
+                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg"
               >
                 Submit Final
               </button>
             </div>
-          </section>
+          </div>
         </div>
       </div>
     </div>
@@ -605,16 +622,13 @@ export const ReviewComponent = ({
 // Email Confirmation Component (unchanged)
 export const EmailConfirmationComponent = ({ email, onConfirm, onResend }) => {
   const [code, setCode] = useState("");
-
   const handleCodeChange = (e) => {
     setCode(e.target.value);
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onConfirm(code);
   };
-
   return (
     <div className="w-full min-h-full flex justify-center ">
       <div className="w-[90%] mt-4 ">
