@@ -1,7 +1,73 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { ReturnButton, Submitbutton } from "../../../components/buttons";
 import { ReusableFileUpload } from "../../../components/reusable_file_upload";
 import SearchableDropdown from "../../../components/searchable_drop_down";
+
+// Consolidated Departments and Courses Arrays
+const departments = [
+  "College of Arts and Sciences",
+  "College of Computing ad Multimedia Studies",
+  "College of Business and Public Administration",
+  "College of Engineering",
+  "College of Education",
+  "College of Trades and Technology",
+  "College of Agriculture and Natural Resources",
+  "Institute of Fisheries and Marine Sciences",
+];
+
+const courses = [
+  // College of Arts and Sciences
+  "Bachelor of Science in Biology",
+  "Bachelor of Science in Applied Mathematics",
+  "Bachelor of Science in Development Communication",
+  "Bachelor of Arts in English Language Studies",
+  "Bachelor of Arts in Sociology",
+  // Institute of Computer Studies
+  "Bachelor of Science in Information Technology",
+  "Bachelor of Science in Information Systems",
+  // College of Business and Public Administration
+  "Bachelor of Science in Business Administration – Business Economics",
+  "Bachelor of Science in Business Administration – Financial Management",
+  "Bachelor of Science in Business Administration – Marketing Management",
+  "Bachelor of Science in Business Administration – Human Resource Management",
+  "Bachelor of Science in Accountancy",
+  "Bachelor of Science in Hospitality Management",
+  "Bachelor of Science in Office Administration",
+  "Bachelor of Science in Entrepreneurship",
+  "Bachelor in Public Administration",
+  // College of Engineering
+  "Bachelor of Science in Civil Engineering",
+  "Bachelor of Science in Electrical Engineering",
+  "Bachelor of Science in Mechanical Engineering",
+  // College of Education
+  "Bachelor of Elementary Education",
+  "Bachelor of Secondary Education – Major in English",
+  "Bachelor of Secondary Education – Major in Filipino",
+  "Bachelor of Secondary Education – Major in Mathematics",
+  "Bachelor of Secondary Education – Major in Social Studies",
+  "Bachelor of Secondary Education – Major in Sciences",
+  "Bachelor of Technology and Livelihood Education – Home Economics",
+  "Bachelor of Physical Education",
+  // College of Trades and Technology
+  "Bachelor of Technical-Vocational Teacher Education – Garments Fashion and Design",
+  "Bachelor of Technical-Vocational Teacher Education – Food Service and Management",
+  "Bachelor of Technical-Vocational Teacher Education – Automotive Technology",
+  "Bachelor of Technical-Vocational Teacher Education – Electrical Technology",
+  "Bachelor of Science in Industrial Technology – Automotive Technology",
+  "Bachelor of Science in Industrial Technology – Electrical Technology",
+  "Bachelor of Science in Industrial Technology – Computer Technology",
+  "Bachelor of Science in Industrial Technology – Electronics Technology",
+  // College of Agriculture and Natural Resources
+  "Bachelor of Science in Agriculture – Crop Science",
+  "Bachelor of Science in Agriculture – Animal Science",
+  "Bachelor of Science in Environmental Science",
+  "Bachelor in Agricultural Technology",
+  "Bachelor of Science in Agricultural and Biosystems Engineering",
+  // Institute of Fisheries and Marine Sciences
+  "Bachelor of Science in Fisheries",
+  // Alternative Track (from Entienza Campus, but campus disregarded)
+  "Bachelor of Science in Entrepreneurship (Agricultural Production Track)",
+];
 
 // Organization Component with Show/Hide Password indicator
 export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
@@ -18,8 +84,8 @@ export const OrganizationComponent = ({ formData, onChange, handleSubmit }) => {
   const toggleOrgPassword = () => setShowOrgPassword((prev) => !prev);
 
   const classification = formData.classification;
-  const departments = ["Department A", "Department B", "Department C"];
-  const courses = ["Course X", "Course Y", "Course Z"];
+  // Use the updated departments and courses arrays
+  // (departments and courses are imported from the top scope)
 
   const handleDepartmentChange = (selected) => {
     onChange({
@@ -244,8 +310,7 @@ export const AdviserComponent = ({
   const toggleAdviserPassword = () => setShowAdviserPassword((prev) => !prev);
 
   const classification = formData.classification;
-  const departments = ["Department A", "Department B", "Department C"];
-  const courses = ["Course X", "Course Y", "Course Z"];
+  // Update the departments array here as well; courses array is not needed.
 
   const handleDepartmentChange = (selected) => {
     onChange({
@@ -559,15 +624,11 @@ export const ReviewComponent = ({
                   Object.entries(uploadedFiles).map(([key, file]) => (
                     <div
                       key={key}
-                      className="flex-1 min-w-50 p-4 bg-white rounded-lg shadow hover:shadow-black 
-                      transition duration-200 flex flex-col items-center text-center gap-2"
+                      className="flex-1 min-w-50 p-4 bg-white rounded-lg shadow hover:shadow-black transition duration-200 flex flex-col items-center text-center gap-2"
                     >
-                      {/* Header text that won't overflow */}
                       <h3 className="text-gray-800 font-semibold w-full whitespace-normal break-words">
                         {key}
                       </h3>
-
-                      {/* Inline SVG icon in the center */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-10 w-10 text-gray-400"
@@ -582,8 +643,6 @@ export const ReviewComponent = ({
                           d="M7 7h10M7 11h10m-7 4h7M5 21h14a2 2 0 002-2V7l-7-7H5a2 2 0 00-2 2v14a2 2 0 002 2z"
                         />
                       </svg>
-
-                      {/* File name that wraps inside the box */}
                       <p className="text-sm text-gray-700 w-full whitespace-normal break-words">
                         {file.name}
                       </p>
