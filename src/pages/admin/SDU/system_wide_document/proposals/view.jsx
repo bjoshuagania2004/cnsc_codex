@@ -42,6 +42,26 @@ function SduProposalTable({ onEditProposal }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const getStatusStyles = (status) => {
+    if (!status) return "bg-gray-100 text-gray-500";
+
+    const lower = status.toLowerCase();
+
+    if (lower.includes("approved")) {
+      return "bg-green-100 text-green-800";
+    }
+
+    if (lower.includes("revision")) {
+      return "bg-yellow-100 text-yellow-800";
+    }
+
+    if (lower.includes("rejected")) {
+      return "bg-red-100 text-red-700";
+    }
+
+    return "bg-gray-100 text-gray-700"; // Fallback
+  };
+
   const filteredProposals =
     filter === "All"
       ? proposals
@@ -87,9 +107,9 @@ function SduProposalTable({ onEditProposal }) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white font-sans">
+        <table className="min-w-full border-collapse bg-white">
           <thead>
-            <tr className="bg-gray-50">
+            <tr className="bg-gray-100 border-b">
               <th className="p-3 text-left text-xs font-semibold text-gray-600 border-b px-5">
                 Title
               </th>
@@ -122,20 +142,16 @@ function SduProposalTable({ onEditProposal }) {
                   </td>
                   <td className="px-6 py-4 text-sm">
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                        proposal.approval_status === "Pending"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : proposal.approval_status === "Approved"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      }`}
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusStyles(
+                        proposal.approval_status
+                      )}`}
                     >
-                      {proposal.approval_status}
+                      {proposal.approval_status || "Unknown"}
                     </span>
                   </td>
                   <td className="px-6 py-4 text-center">
                     <button
-                      className="p-1.5 bg-[#17a2b8] hover:bg-[#138496] text-white rounded-full"
+                      className="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-green-600"
                       title="View"
                       onClick={() => onEditProposal(proposal)}
                     >

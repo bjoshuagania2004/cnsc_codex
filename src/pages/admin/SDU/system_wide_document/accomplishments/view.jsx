@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { API_ROUTER } from "../../../../../App";
-import { faPen, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faPen, faTimes, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SduAccomplishmentApprovalEdit from "./edit";
 
@@ -88,78 +88,94 @@ function SDuAccomplishmentsTable({ editAccomplishment }) {
     );
   }
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Accomplishments</h1>
+  const getStatusStyle = (status) => {
+    if (status === "Approved by the Adviser") {
+      return "bg-green-100 text-green-800";
+    } else if (
+      status === "Approved by the SDU" ||
+      status === "Approved by the Dean"
+    ) {
+      return "bg-red-100 text-red-800";
+    } else if (status === "Approved by the OSSD Coordinator") {
+      return "bg-blue-100 text-blue-800";
+    } else if (status === "Pending") {
+      return "bg-yellow-100 text-yellow-800";
+    } else if (status?.includes("Revision")) {
+      return "bg-red-100 text-red-800";
+    }
+    return "bg-gray-100 text-gray-800";
+  };
 
-      <div className="overflow-x-auto shadow-md rounded-lg">
-        <table className="min-w-full bg-white">
+  return (
+    <div className="w-full bg-gray-100 min-h-screen pb-8">
+      <div className="bg-gray-900 text-white p-4">
+        <h1 className="text-xl font-medium">Accomplishments</h1>
+      </div>
+
+      <div className="overflow-x-auto bg-white shadow-md rounded-lg mx-4 mt-4">
+        <table className="min-w-full border-collapse bg-white">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                Event Title
+            <tr className="bg-gray-100 border-b">
+              <th className="py-3 px-4 text-left text-xs uppercase font-medium text-gray-600 tracking-wider">
+                TITLE
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                Organization
+              <th className="py-3 px-4 text-left text-xs uppercase font-medium text-gray-600 tracking-wider">
+                ORGANIZATION
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                Activity Type
+              <th className="py-3 px-4 text-left text-xs uppercase font-medium text-gray-600 tracking-wider">
+                ACTIVITY TYPE
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                Event Date
+              <th className="py-3 px-4 text-left text-xs uppercase font-medium text-gray-600 tracking-wider">
+                EVENT DATE
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                Status
+              <th className="py-3 px-4 text-left text-xs uppercase font-medium text-gray-600 tracking-wider">
+                STATUS
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                Description
+              <th className="py-3 px-4 text-left text-xs uppercase font-medium text-gray-600 tracking-wider">
+                DESCRIPTION
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider" />
+              <th className="py-3 px-4 text-left text-xs uppercase font-medium text-gray-600 tracking-wider">
+                ACTIONS
+              </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-200">
+          <tbody>
             {accomplishmentsList.length > 0 ? (
               accomplishmentsList.map((activity, index) => (
-                <tr key={activity._id || index} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <tr
+                  key={activity._id || index}
+                  className="border-b hover:bg-gray-50 bg-white"
+                >
+                  <td className="py-4 px-4 text-sm text-gray-800">
                     {activity.event_title || "N/A"}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="py-4 px-4 text-sm text-gray-800">
                     {activity.organization?.org_name || "N/A"}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="py-4 px-4 text-sm text-gray-800">
                     {activity.activity_type || "N/A"}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="py-4 px-4 text-sm text-gray-800">
                     {activity.event_date
                       ? LongDateFormat(new Date(activity.event_date))
                       : "N/A"}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="py-4 px-4">
                     <span
-                      className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        activity.over_all_status === "Approved by the Adviser"
-                          ? "bg-green-100 text-green-800"
-                          : activity.over_all_status === "Approved by the Dean"
-                          ? "bg-blue-100 text-blue-800"
-                          : activity.over_all_status ===
-                            "Approved by the OSSD Coordinator"
-                          ? "bg-blue-100 text-blue-800"
-                          : activity.over_all_status === "Pending"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
+                      className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                        activity.over_all_status
+                      )}`}
                     >
                       {activity.over_all_status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                  <td className="py-4 px-4 text-sm text-gray-800 max-w-xs truncate">
                     {activity.event_description || "N/A"}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">
+                  <td className="py-4 px-4 flex gap-2">
                     <button
-                      className="p-1.5 bg-[#17a2b8] hover:bg-[#138496] text-white rounded-full"
-                      title="View"
+                      className="w-8 h-8 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-green-600"
+                      title="Edit"
                       onClick={() => editAccomplishment(activity)}
                     >
                       <FontAwesomeIcon icon={faPen} />
@@ -170,7 +186,7 @@ function SDuAccomplishmentsTable({ editAccomplishment }) {
             ) : (
               <tr>
                 <td
-                  colSpan="6"
+                  colSpan="7"
                   className="px-6 py-4 text-center text-sm text-gray-500 italic"
                 >
                   No accomplishments found.
@@ -185,11 +201,11 @@ function SDuAccomplishmentsTable({ editAccomplishment }) {
 }
 
 export default function SduAccomplishmentApprovalSection() {
-  const [selectedAccomplishment, setselectedAccomplishment] = useState(null);
+  const [selectedAccomplishment, setSelectedAccomplishment] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleEditAccomplishment = (accomplishment) => {
-    setselectedAccomplishment(accomplishment);
+    setSelectedAccomplishment(accomplishment);
     setIsEditModalOpen(true);
   };
 

@@ -105,108 +105,124 @@ export default function EditProposalAdviserSection({ user, proposal, onBack }) {
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6 bg-white p-4">
-      {popup.visible && (
-        <PopUp
-          {...popup}
-          onClose={() => setPopup((p) => ({ ...p, visible: false }))}
-        />
-      )}
+    <div className="max-w-7xl mx-auto h-screen p-6 bg-white shadow-lg rounded-lg flex flex-col">
+      <form
+        onSubmit={onSubmit}
+        className="space-y-6 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100"
+        style={{ maxHeight: "100%", minHeight: 0 }}
+      >
+        {popup.visible && (
+          <PopUp
+            {...popup}
+            onClose={() => setPopup((p) => ({ ...p, visible: false }))}
+          />
+        )}
 
-      <h2 className="text-2xl font-bold text-center">
-        Proposal Title: {proposal.title}
-      </h2>
-      <p className="text-lg">
-        Description: {proposal.description} <br />
-        Event Date:{" "}
-        {new Date(proposal.event_date).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })}
-      </p>
+        <h2 className="text-3xl font-bold text-center mb-4">
+          Proposal Title: {proposal.title}
+        </h2>
+        <p className="text-lg mb-4">
+          Description: {proposal.description} <br />
+          Event Date:{" "}
+          {new Date(proposal.event_date).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </p>
 
-      {documentsConfig.map(({ key, label, files }) => (
-        <section key={key} className="border">
-          <h3 className="font-semibold">{label}</h3>
-          {files.length > 0 && files[0] ? (
-            <div className="">
-              <div className="flex flex-col gap-6">
-                <div className="flex border items-center flex-1 gap-4">
-                  <div className="max-w-fit border-red-500   flex">
-                    <label className="mr-4">
-                      <input
-                        type="radio"
-                        name={`${key}Status`}
-                        value="approved"
-                        checked={docStatus[key] === "approved"}
-                        onChange={() => handleChange(key, "status", "approved")}
-                      />
-                      Approved
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name={`${key}Status`}
-                        value="revision"
-                        checked={docStatus[key] === "revision"}
-                        onChange={() => handleChange(key, "status", "revision")}
-                      />
-                      Revision
-                    </label>
+        {documentsConfig.map(({ key, label, files }) => (
+          <section key={key} className="border p-4 rounded-lg mb-4">
+            <h3 className="font-semibold text-xl mb-2">{label}</h3>
+            {files.length > 0 && files[0] ? (
+              <div className="">
+                <div className="flex flex-col gap-4">
+                  <div className="flex border items-center flex-1 gap-4">
+                    <div className="flex">
+                      <label className="mr-4">
+                        <input
+                          type="radio"
+                          name={`${key}Status`}
+                          value="approved"
+                          checked={docStatus[key] === "approved"}
+                          onChange={() =>
+                            handleChange(key, "status", "approved")
+                          }
+                          className="mr-2"
+                        />
+                        Approved
+                      </label>
+                      <label>
+                        <input
+                          type="radio"
+                          name={`${key}Status`}
+                          value="revision"
+                          checked={docStatus[key] === "revision"}
+                          onChange={() =>
+                            handleChange(key, "status", "revision")
+                          }
+                          className="mr-2"
+                        />
+                        Revision
+                      </label>
+                    </div>
+                    <div className="flex-1">
+                      {docStatus[key] === "revision" && (
+                        <textarea
+                          className="w-full h-full border p-2 rounded"
+                          rows={3}
+                          placeholder="Reason for revision"
+                          value={revisionNotes[key]}
+                          onChange={(e) =>
+                            handleChange(key, "note", e.target.value)
+                          }
+                        />
+                      )}
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    {docStatus[key] === "revision" && (
-                      <textarea
-                        className="w-full h-full border p-4"
-                        rows={3}
-                        placeholder="Reason for revision"
-                        value={revisionNotes[key]}
-                        onChange={(e) =>
-                          handleChange(key, "note", e.target.value)
-                        }
+                  <div className="flex-1 flex shrink-0 overflow-auto">
+                    {files.map((file, i) => (
+                      <FileRenderer
+                        key={i}
+                        basePath={basePath}
+                        fileName={file}
                       />
-                    )}
+                    ))}
                   </div>
-                </div>
-                <div className="flex-1 flex shrink-0 overflow-auto">
-                  {files.map((file, i) => (
-                    <FileRenderer key={i} basePath={basePath} fileName={file} />
-                  ))}
                 </div>
               </div>
-            </div>
-          ) : (
-            <p className="italic text-sm">None</p>
-          )}
-        </section>
-      ))}
+            ) : (
+              <p className="italic text-sm">None</p>
+            )}
+          </section>
+        ))}
 
-      <div className="flex justify-end gap-4 pt-4">
-        <button
-          type="button"
-          onClick={onBack}
-          disabled={loading}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-        >
-          Back
-        </button>
-        <button
-          type="submit"
-          disabled={loading}
-          className={`px-4 py-2 rounded ${
-            isAllApproved()
-              ? "bg-green-600 hover:bg-green-700 text-white"
-              : "bg-gray-200 text-black"
-          }`}
-        >
-          {loading
-            ? "Submitting..."
-            : isAllApproved()
-            ? "Approve"
-            : "Send Revision"}
-        </button>
-      </div>
-    </form>
+        <div className="flex justify-end gap-4 pt-4 overflow-auto">
+          <button
+            type="button"
+            onClick={onBack}
+            disabled={loading}
+            className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+          >
+            Back
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`px-4 py-2 rounded transition ${
+              isAllApproved()
+                ? "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-gray-200 text-black"
+            }`}
+          >
+            {loading
+              ? "Submitting..."
+              : isAllApproved()
+              ? "Approve"
+              : "Send Revision"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }
