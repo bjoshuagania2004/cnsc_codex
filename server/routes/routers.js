@@ -28,6 +28,10 @@ import {
   GetOrganizationByOrgName,
   GetSystemWideAccomplishments,
   GetProposalsSystemWide,
+  AllSystemLogs,
+  localSystemLogs,
+  DepartmentalSystemLogs,
+  SystemWideSystemLogs,
 } from "../controllers/general.js";
 
 import { UpdateProposalsNotesAdviser } from "../controllers/adviser_admin/document_controller.js";
@@ -44,6 +48,7 @@ import {
   GetAllAccreditations,
   GetAccreditationById,
   UpdateAccreditationSDU,
+  UpdateAccreditationCertainDocument,
 } from "../controllers/accreditation_controller.js";
 
 import {
@@ -78,6 +83,12 @@ const upload = multer();
 
 const router = express.Router();
 
+//logs
+router.get("/logs", AllSystemLogs);
+router.get("/logs/:organizationId", localSystemLogs);
+router.post("/logs/departmental", DepartmentalSystemLogs);
+router.get("/system-wide-logs", SystemWideSystemLogs);
+
 /* GENERAL ROUTE */
 router.post("/login", Login);
 router.get("/get-all-files", GetAllFile);
@@ -98,6 +109,12 @@ router.get("/get-pinned-files/:organizationId", GetFileNames);
 router.post("/create-new-user", CreateNewUser);
 
 /*ACCREDITATION ROUTE*/
+router.post(
+  "/student-update-accreditation/:accreditationId",
+  UploadMultipleFiles,
+  UpdateAccreditationCertainDocument
+);
+
 router.get("/get-accreditation", GetAllAccreditations);
 router.get("/get-accreditation/:id", GetAccreditationById);
 router.post("/confirm-verification-accreditation", ConfirmAccreditation);

@@ -14,13 +14,14 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { API_ROUTER } from "../../../App";
 import DeanOverview from "./ossd_home_page";
-import DeanOrganizationBoard from "./ossd_organization";
 import OssdAccomplishmentView from "./documents/ossd_accomplishment_view";
 import ProposalsEditOSSD from "./documents/ossd_proposal_view";
+import OssdOrganizationBoard from "./ossd_organization";
+import { DepartmentalLogsUI } from "../../../components/system_logs";
 
 export default function OSSDCoordinatorPage() {
   const [storedUser, setStoredUser] = useState(null);
-  const [activeContent, setActiveContent] = useState("proposals");
+  const [activeContent, setActiveContent] = useState("home");
   const [organizations, setOrganizations] = useState([]);
   const navigate = useNavigate();
 
@@ -68,9 +69,16 @@ export default function OSSDCoordinatorPage() {
   const renderContent = () => {
     switch (activeContent) {
       case "home":
-        return <DeanOverview organizations={organizations} />;
+        console.log(organizations);
+        console.log(storedUser);
+        return <DeanOverview organization={organizations} user={storedUser} />;
       case "organizations":
-        return <DeanOrganizationBoard organizations={organizations} />;
+        return (
+          <OssdOrganizationBoard
+            organization={organizations}
+            user={storedUser}
+          />
+        );
       case "accomplishment":
         return (
           <OssdAccomplishmentView
@@ -78,6 +86,8 @@ export default function OSSDCoordinatorPage() {
             organizations={organizations}
           />
         );
+      case "logs":
+        return <DepartmentalLogsUI organization={organizations} />;
       case "proposals":
         return <ProposalsEditOSSD organization={organizations} />;
       default:
@@ -127,7 +137,20 @@ export default function OSSDCoordinatorPage() {
             </div>
           ))}
         </nav>
-
+        <hr className="mx-4 my-2" />
+        <div key="logs" className="text-sm font-medium">
+          <div
+            onClick={() => handleClick("logs")}
+            className={`flex items-center gap-3 px-6 py-3 cursor-pointer transition ${
+              activeContent === "logs"
+                ? "bg-[#DFE4EB] text-[#1B3A57] font-semibold"
+                : "hover:bg-[#2E4B6B] text-white"
+            }`}
+          >
+            <FontAwesomeIcon icon={faClockRotateLeft} />
+            Logs
+          </div>
+        </div>
         {/* Logout */}
         <div
           onClick={handleLogout}
