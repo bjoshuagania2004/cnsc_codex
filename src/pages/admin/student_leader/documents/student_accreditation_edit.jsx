@@ -164,7 +164,7 @@ export default function StudentAccreditationDetailsView({ userData }) {
   return (
     <div className="bg-white shadow-lg overflow-hidden">
       {/* Header with org logo and main details */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-6 text-white">
+      <div className="bg-gray-500 p-6 text-white">
         <div className="flex items-center space-x-4">
           <div className="bg-white rounded-full p-2 h-16 w-16 flex items-center justify-center">
             {logo ? (
